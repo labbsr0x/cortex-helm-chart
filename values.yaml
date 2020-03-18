@@ -104,9 +104,9 @@ alertmanager:
   resources:
     requests:
       memory: 1Gi
-      cpu: 4
+      cpu: 1
     limits:
-      cpu: 4
+      cpu: 2
 
 configsdb:
   enabled: false
@@ -162,7 +162,7 @@ configs:
   resources:
     requests:
       memory: 128Mi
-      cpu: 250m
+      cpu: 128m
     limits:
       cpu: 250m
 
@@ -189,9 +189,9 @@ consul:
   resources:
     requests:
       memory: 512Mi
-      cpu: 1
+      cpu: "0.25"
     limits:
-      cpu: 1
+      cpu: "0.25"
 
 distributor:
   replicas: 1
@@ -218,10 +218,10 @@ distributor:
               - cortex
   resources:
     requests:
-      memory: 4Gi
-      cpu: 4
+      memory: 1Gi
+      cpu: "0.5"
     limits:
-      cpu: 4
+      cpu: 2
 
 dynamodbLocal:
   enabled: true
@@ -247,7 +247,7 @@ dynamodbLocal:
               - cortex
 
 ingester:
-  replicas: 3
+  replicas: 2
   image:
     repository: quay.io/cortexproject/ingester
     tag: master-79bba2f9
@@ -271,24 +271,24 @@ ingester:
               - cortex
   resources:
     requests:
-      memory: 4Gi
-      cpu: 4
+      memory: 500Mi
+      cpu: "0.5"
     limits:
-      cpu: 4
+      cpu: 1
 
 # chunk caching
 memcached:
   replicaCount: 1
   pdbMinAvailable: 1
-  enabled: true
+  enabled: false
   memcached:
     maxItemMemory: 3840
     threads: 32
   resources:
     requests:
-      memory: 4Gi
+      memory: 2Gi
       cpu: 500m
-    limit:
+    limits:
       cpu: 500m
   metrics:
     enabled: true
@@ -311,7 +311,7 @@ memcached:
 memcached-index-read:
   replicaCount: 1
   pdbMinAvailable: 1
-  enabled: true
+  enabled: false
   image: memcached:1.5.7-alpine
   memcached:
     maxItemMemory: 3840
@@ -319,9 +319,9 @@ memcached-index-read:
     threads: 32
   resources:
     requests:
-      memory: 4Gi
+      memory: 2Gi
       cpu: 500m
-    limit:
+    limits:
       cpu: 500m
   metrics:
     enabled: true
@@ -344,7 +344,7 @@ memcached-index-read:
 memcached-index-write:
   replicaCount: 1
   pdbMinAvailable: 1
-  enabled: true
+  enabled: false
   image: memcached:1.5.7-alpine
   memcached:
     maxItemMemory: 3840
@@ -352,9 +352,9 @@ memcached-index-write:
     threads: 32
   resources:
     requests:
-      memory: 4Gi
+      memory: 2Gi
       cpu: 500m
-    limit:
+    limits:
       cpu: 500m
   metrics:
     enabled: true
@@ -374,6 +374,7 @@ memcached-index-write:
               - cortex-memcached
 
 querier:
+  maxConcurrent: 2
   replicas: 1
   image:
     repository: quay.io/cortexproject/querier
@@ -400,12 +401,12 @@ querier:
   resources:
     requests:
       memory: 1Gi
-      cpu: 1
+      cpu: "0.25"
     limits:
       cpu: 1
 
 retrieval:
-  enabled: true
+  enabled: false
   image:
     repository: prom/prometheus
     tag: v1.4.1
@@ -513,7 +514,7 @@ nginx:
 queryFrontend:
   # Do not increase until https://github.com/cortexproject/cortex/issues/1150
   # is resolved.
-  replicas: 2
+  replicas: 1
   image:
     repository: quay.io/cortexproject/query-frontend
     tag: master-79bba2f9
@@ -535,9 +536,3 @@ queryFrontend:
               operator: In
               values:
               - cortex
-  resources:
-    requests:
-      memory: 1Gi
-      cpu: 1
-    limits:
-      cpu: 1

@@ -24,7 +24,6 @@ Create the cortex arguments for table config
 - -dynamodb.{{ $name }}-table.from={{ $cfg.from }}
 - -dynamodb.{{ $name }}-table.period={{ $cfg.period }}
 {{ end -}}
-- -dynamodb.v6-schema-from={{.Values.dynamodb.v6SchemaFrom}}
 - -dynamodb.v9-schema-from={{.Values.dynamodb.v9SchemaFrom}}
 - -dynamodb.use-periodic-tables
 {{- end -}}
