@@ -248,6 +248,7 @@ dynamodbLocal:
 
 ingester:
   replicas: 2
+  ingesterMaxChunkAge: 10m
   image:
     repository: quay.io/cortexproject/ingester
     tag: master-79bba2f9
@@ -536,3 +537,16 @@ queryFrontend:
               operator: In
               values:
               - cortex
+
+cassandra:
+  addresses: cassandra.cassandra.svc.cluster.local
+  keyspace: cortex
+  timeout: 1000ms
+  replicationFactor: 3
+  chunkStorageClient: cassandra
+  auth: true
+  username: cassandra
+  password: VbYSOIXb8u
+  hostVerification: false
+  ssl: false
+  consistency: LOCAL_QUORUM

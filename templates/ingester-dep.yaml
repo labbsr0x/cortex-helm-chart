@@ -60,7 +60,26 @@ spec:
         - -ingester.join-after=30s
         - -ingester.claim-on-rollout=true
         - -ingester.search-pending-for=5m
+        {{if hasKey .Values.ingester "ingesterMaxChunkAge"}}
+        - -ingester.max-chunk-age={{ .Values.ingester.ingesterMaxChunkAge }}
+        {{end}}
+        {{if hasKey .Values.cassandra "consistency"}}
+        - -cassandra.consistency={{ .Values.cassandra.consistency }}
+        {{end}}
         - -consul.hostname={{ template "fullname" .}}-consul.{{ .Release.Namespace }}.svc.cluster.local:8500
+        - -cassandra.addresses={{ .Values.cassandra.addresses }}
+        - -cassandra.keyspace={{ .Values.cassandra.keyspace }}
+        - -cassandra.timeout={{ .Values.cassandra.timeout }}
+        - -cassandra.replication-factor={{ .Values.cassandra.replicationFactor }}
+        - -chunk.storage-client={{ .Values.cassandra.chunkStorageClient }}
+        - -cassandra.host-verification={{ .Values.cassandra.hostVerification }}
+        - -cassandra.ssl={{ .Values.cassandra.ssl }}
+        {{ if .Values.cassandra.auth}}
+        - -cassandra.auth={{ .Values.cassandra.auth }}
+        - -cassandra.username={{ .Values.cassandra.username }}
+        - -cassandra.password={{ .Values.cassandra.password }}
+        {{end}}
+
         - -dynamodb.original-table-name={{ index .Values "dynamodb" "original-table-name" }}
         {{ if not .Values.dynamodbLocal.enabled -}}
         {{ if .Values.aws.stsEnabled -}}

@@ -38,6 +38,22 @@ spec:
         imagePullPolicy: IfNotPresent
         args:
         - -server.http-listen-port=80
+        - -cassandra.addresses={{ .Values.cassandra.addresses }}
+        - -cassandra.keyspace={{ .Values.cassandra.keyspace }}
+        - -cassandra.timeout={{ .Values.cassandra.timeout }}
+        - -cassandra.replication-factor={{ .Values.cassandra.replicationFactor }}
+        - -chunk.storage-client={{ .Values.cassandra.chunkStorageClient }}
+        - -cassandra.host-verification={{ .Values.cassandra.hostVerification }}
+        - -cassandra.ssl={{ .Values.cassandra.ssl }}
+        {{if hasKey .Values.cassandra "consistency"}}
+        - -cassandra.consistency={{ .Values.cassandra.consistency }}
+        {{end}}
+        {{ if .Values.cassandra.auth }}
+        - -cassandra.auth={{ .Values.cassandra.auth }}
+        - -cassandra.username={{ .Values.cassandra.username }}
+        - -cassandra.password={{ .Values.cassandra.password }}
+        {{ end }}
+
         - -consul.hostname={{ template "fullname" . }}-consul.{{ .Release.Namespace }}.svc.cluster.local:8500
         # - -querier.frontend-address={{ template "fullname" . }}-query-frontend.{{ .Release.Namespace }}.svc.cluster.local:9095
         - -querier.query-ingesters-within={{ .Values.querier.queryIngestersWithin }}

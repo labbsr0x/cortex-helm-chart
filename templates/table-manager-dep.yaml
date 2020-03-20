@@ -35,6 +35,22 @@ spec:
         imagePullPolicy: IfNotPresent
         args:
         - -server.http-listen-port=80
+        - -cassandra.addresses={{ .Values.cassandra.addresses }}
+        - -cassandra.keyspace={{ .Values.cassandra.keyspace }}
+        - -cassandra.timeout={{ .Values.cassandra.timeout }}
+        - -cassandra.timeout={{ .Values.cassandra.timeout }}
+        - -chunk.storage-client={{ .Values.cassandra.chunkStorageClient }}
+        - -cassandra.host-verification={{ .Values.cassandra.hostVerification }}
+        - -cassandra.ssl={{ .Values.cassandra.ssl }}
+        {{if hasKey .Values.cassandra "consistency"}}
+        - -cassandra.consistency={{ .Values.cassandra.consistency }}
+        {{end}}
+        {{if .Values.cassandra.auth}}
+        - -cassandra.auth={{ .Values.cassandra.auth }}
+        - -cassandra.username={{ .Values.cassandra.username }}
+        - -cassandra.password={{ .Values.cassandra.password }}
+        {{end}}
+
         - "-dynamodb.original-table-name={{ .Values.dynamodb.originalTableName }}"
         - "-dynamodb.periodic-table.inactive-read-throughput={{.Values.dynamodb.tableConfigs.periodic.inactiveReadThroughput.base}}"
         - "-dynamodb.periodic-table.inactive-write-throughput={{.Values.dynamodb.tableConfigs.periodic.inactiveWriteThroughput.base}}"
