@@ -35,7 +35,7 @@ spec:
         imagePullPolicy: IfNotPresent
         args:
         - -server.http-listen-port=80
-        - -cassandra.addresses={{ .Values.cassandra.addresses }}
+        - -cassandra.addresses={{ template "name" .}}-cassandra.{{ .Release.Namespace }}.svc.cluster.local
         - -cassandra.keyspace={{ .Values.cassandra.keyspace }}
         - -cassandra.timeout={{ .Values.cassandra.timeout }}
         - -cassandra.timeout={{ .Values.cassandra.timeout }}
@@ -47,8 +47,8 @@ spec:
         {{end}}
         {{if .Values.cassandra.auth}}
         - -cassandra.auth={{ .Values.cassandra.auth }}
-        - -cassandra.username={{ .Values.cassandra.username }}
-        - -cassandra.password={{ .Values.cassandra.password }}
+        - -cassandra.username={{ .Values.cassandra.dbUser.password }}
+        - -cassandra.password={{ .Values.cassandra.dbUser.password }}
         {{end}}
 
         - "-dynamodb.original-table-name={{ .Values.dynamodb.originalTableName }}"

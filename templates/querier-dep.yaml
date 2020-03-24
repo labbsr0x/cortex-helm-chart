@@ -38,7 +38,7 @@ spec:
         imagePullPolicy: IfNotPresent
         args:
         - -server.http-listen-port=80
-        - -cassandra.addresses={{ .Values.cassandra.addresses }}
+        - -cassandra.addresses={{ template "name" .}}-cassandra.{{ .Release.Namespace }}.svc.cluster.local
         - -cassandra.keyspace={{ .Values.cassandra.keyspace }}
         - -cassandra.timeout={{ .Values.cassandra.timeout }}
         - -cassandra.replication-factor={{ .Values.cassandra.replicationFactor }}
@@ -50,8 +50,8 @@ spec:
         {{end}}
         {{ if .Values.cassandra.auth }}
         - -cassandra.auth={{ .Values.cassandra.auth }}
-        - -cassandra.username={{ .Values.cassandra.username }}
-        - -cassandra.password={{ .Values.cassandra.password }}
+        - -cassandra.username={{ .Values.cassandra.dbUser.username }}
+        - -cassandra.password={{ .Values.cassandra.dbUser.password }}
         {{ end }}
 
         - -consul.hostname={{ template "fullname" . }}-consul.{{ .Release.Namespace }}.svc.cluster.local:8500
@@ -78,8 +78,12 @@ spec:
         {{ end }}
         {{ end }}
 {{ include "cortex.tableargs" . | indent 8 }}
+{{ if .Values.memcached.enabled }}
 {{ include "cortex.memcachedArgs" . | indent 8 }}
+{{ end }}
+{{if .Values.memcached.enabled}}
 {{ include "cortex.storeIndexMemcachedArgs" . | indent 8 }}
+{{end}}
         - -distributor.replication-factor={{ .Values.replicationFactor }}
         - -querier.batch-iterators
         - -querier.ingester-streaming

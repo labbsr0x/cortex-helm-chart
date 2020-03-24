@@ -539,14 +539,29 @@ queryFrontend:
               - cortex
 
 cassandra:
-  addresses: cassandra.cassandra.svc.cluster.local
+  enabled: true
   keyspace: cortex
   timeout: 1000ms
-  replicationFactor: 3
+  replicationFactor: 1
   chunkStorageClient: cassandra
   auth: true
   username: cassandra
-  password: VbYSOIXb8u
   hostVerification: false
   ssl: false
   consistency: LOCAL_QUORUM
+  affinity:
+    nodeAffinity:
+      requiredDuringSchedulingIgnoredDuringExecution:
+          nodeSelectorTerms:
+          - matchExpressions:
+            - key: dedicated
+              operator: In
+              values:
+              - cortex
+  tolerations:
+  - key: "dedicated"
+    operator: "Equal"
+    value: "cortex"
+    effect: "NoSchedule"
+  dbUser:
+    password: strong(!)Password
