@@ -1,5 +1,6 @@
 dynamodb:
   originalTableName: cortex_original
+  enabled: false
   v9SchemaFrom: 2019-06-05
   # Configs used to build table CLI flags for services.
   # Only supports "chunk" and "periodic" tables
@@ -12,17 +13,21 @@ dynamodb:
       inactiveWriteThroughput:
         base: 1
         scale:
-          enabled: true
+          enabled: false
           minCapacity: 3000
           maxCapacity: 6000
       inactiveReadThroughput:
         base: 300
+        scale:
+          enabled: false
       readThroughput:
         base: 300
+        scale:
+          enabled: false
       writeThroughput:
         base: 3000
         scale:
-          enabled: true
+          enabled: false
           minCapacity: 3000
           maxCapacity: 6000
     periodic:
@@ -33,17 +38,21 @@ dynamodb:
       inactiveWriteThroughput:
         base: 1
         scale:
-          enabled: true
+          enabled: false
           minCapacity: 3000
           maxCapacity: 6000
       inactiveReadThroughput:
         base: 300
+        scale:
+          enabled: false
       readThroughput:
         base: 300
+        scale:
+          enabled: false
       writeThroughput:
         base: 3000
         scale:
-          enabled: true
+          enabled: false
           minCapacity: 3000
           maxCapacity: 6000
 
@@ -224,7 +233,7 @@ distributor:
       cpu: 2
 
 dynamodbLocal:
-  enabled: true
+  enabled: false
   image:
     repository: deangiberson/aws-dynamodb-local
     tag: latest
