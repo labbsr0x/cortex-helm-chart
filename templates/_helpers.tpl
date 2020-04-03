@@ -18,6 +18,7 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 Create the cortex arguments for table config
 */}}
 {{- define "cortex.tableargs" -}}
+{{ if .Values.dynamodb.tableConfigs.enabled }}
 {{ range $name, $cfg := .Values.dynamodb.tableConfigs -}}
 - -dynamodb.{{ $name }}-table.prefix={{ $cfg.prefix }}
 - -dynamodb.{{ $name }}-table.tag={{ $cfg.tag }}
@@ -26,6 +27,7 @@ Create the cortex arguments for table config
 {{ end -}}
 - -dynamodb.v9-schema-from={{.Values.dynamodb.v9SchemaFrom}}
 - -dynamodb.use-periodic-tables
+{{ end }}
 {{- end -}}
 
 {{/* Pre-calculate name used in memcached subchart */}}

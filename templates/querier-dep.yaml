@@ -38,6 +38,7 @@ spec:
         imagePullPolicy: IfNotPresent
         args:
         - -server.http-listen-port=80
+        {{ if .Values.cassandra.enabled }}
         - -cassandra.addresses={{ template "name" .}}-cassandra.{{ .Release.Namespace }}.svc.cluster.local
         - -cassandra.keyspace={{ .Values.cassandra.keyspace }}
         - -cassandra.timeout={{ .Values.cassandra.timeout }}
@@ -50,13 +51,14 @@ spec:
         {{end}}
         {{ if .Values.cassandra.auth }}
         - -cassandra.auth={{ .Values.cassandra.auth }}
-        - -cassandra.username={{ .Values.cassandra.dbUser.username }}
+        - -cassandra.username={{ .Values.cassandra.username }}
         - -cassandra.password={{ .Values.cassandra.dbUser.password }}
         {{ end }}
 
         - -consul.hostname={{ template "fullname" . }}-consul.{{ .Release.Namespace }}.svc.cluster.local:8500
         # - -querier.frontend-address={{ template "fullname" . }}-query-frontend.{{ .Release.Namespace }}.svc.cluster.local:9095
         - -querier.query-ingesters-within={{ .Values.querier.queryIngestersWithin }}
+        {{ else }}
         - -dynamodb.original-table-name={{ index .Values "dynamodb" "original-table-name" }}
         {{ if not .Values.dynamodbLocal.enabled -}}
         {{ if .Values.aws.stsEnabled -}}
@@ -75,6 +77,7 @@ spec:
         - -s3.url=s3://{{ .Values.s3.bucketName }}
         {{ else }}
         - -s3.url=s3://$(USER_NAME):$(USER_PASSWORD)@{{ .Values.s3.bucketName }}
+        {{ end }}
         {{ end }}
         {{ end }}
 {{ include "cortex.tableargs" . | indent 8 }}
