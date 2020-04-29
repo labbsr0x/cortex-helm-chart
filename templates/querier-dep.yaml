@@ -28,10 +28,14 @@ spec:
 {{ toYaml . | indent 8 }}
     {{- end }}
     spec:
+      {{- if .Values.querier.tolerations }}
       tolerations:
 {{ toYaml .Values.querier.tolerations | indent 8 }}
+      {{- end }}
+      {{- if .Values.querier.affinity }}
       affinity:
 {{ toYaml .Values.querier.affinity | indent 8 }}
+      {{- end }}
       containers:
       - name: querier
         image: "{{ .Values.querier.image.repository }}:{{ .Values.querier.image.tag }}"
@@ -94,6 +98,7 @@ spec:
         ports:
         - containerPort: 80
           name: http
+        {{- if not .Values.cassandra.enabled }}
         env:
           - name: AWS_DEFAULT_REGION
           {{ if .Values.aws.stsEnabled -}}
@@ -115,6 +120,7 @@ spec:
               secretKeyRef:
                 name: cortex-aws-creds
                 key: USER_PASSWORD
+          {{- end }}
           {{- end }}
         resources:
 {{ toYaml .Values.querier.resources | indent 10 }}

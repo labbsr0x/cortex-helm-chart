@@ -28,10 +28,14 @@ spec:
 {{ toYaml . | indent 8 }}
     {{- end }}
     spec:
+      {{- if .Values.consul.tolerations }}
       tolerations:
 {{ toYaml .Values.consul.tolerations | indent 8 }}
+      {{- end }}
+      {{- if .Values.consul.affinity }}
       affinity:
 {{ toYaml .Values.consul.affinity | indent 8 }}
+      {{- end }}
       containers:
       - name: consul
         image: "{{ .Values.consul.image.repository }}:{{ .Values.consul.image.tag }}"

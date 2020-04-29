@@ -480,7 +480,7 @@ tablemanager:
     prometheus.io/port: "80"
   tolerations:
   - key: "dedicated"
-    operator: "Equal"
+    operator: "Equ"
     value: "cortex"
   affinity:
     nodeAffinity:
@@ -558,19 +558,5 @@ cassandra:
   hostVerification: false
   ssl: false
   consistency: LOCAL_QUORUM
-  affinity:
-    nodeAffinity:
-      requiredDuringSchedulingIgnoredDuringExecution:
-          nodeSelectorTerms:
-          - matchExpressions:
-            - key: dedicated
-              operator: In
-              values:
-              - cortex
-  tolerations:
-  - key: "dedicated"
-    operator: "Equal"
-    value: "cortex"
-    effect: "NoSchedule"
   dbUser:
     password: strong(!)Password

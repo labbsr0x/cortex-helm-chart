@@ -46,12 +46,14 @@ spec:
       # Service is available during this time, as long as we don't stop
       # too many ingesters at once.
       terminationGracePeriodSeconds: 4800
-
+      {{- if .Values.ingester.tolerations }}
       tolerations:
 {{ toYaml .Values.ingester.tolerations | indent 8 }}
+      {{- end }}
+      {{- if .Values.ingester.affinity }}
       affinity:
 {{ toYaml .Values.ingester.affinity | indent 8 }}
-
+      {{- end }}
       containers:
       - name: ingester
         image: "{{ .Values.ingester.image.repository }}:{{ .Values.ingester.image.tag }}"

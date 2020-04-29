@@ -25,10 +25,14 @@ spec:
 {{ toYaml . | indent 8 }}
     {{- end }}
     spec:
+      {{- if .Values.tablemanager.tolerations }}
       tolerations:
 {{ toYaml .Values.tablemanager.tolerations | indent 8 }}
+      {{- end }}
+      {{- if .Values.tablemanager.affinity }}
       affinity:
 {{ toYaml .Values.tablemanager.affinity | indent 8 }}
+      {{- end }}
       containers:
       - name: table-manager
         image: "{{ .Values.tablemanager.image.repository }}:{{ .Values.tablemanager.image.tag }}"
@@ -143,6 +147,7 @@ spec:
         ports:
         - containerPort: 80
           name: http
+        {{- if not .Values.cassandra.enabled }}
         env:
           - name: AWS_DEFAULT_REGION
           {{ if .Values.aws.stsEnabled -}}
@@ -164,6 +169,7 @@ spec:
               secretKeyRef:
                 name: cortex-aws-creds
                 key: USER_PASSWORD
+          {{- end }}
           {{- end }}
         resources:
 {{ toYaml .Values.tablemanager.resources | indent 10 }}

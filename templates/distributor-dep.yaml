@@ -28,10 +28,14 @@ spec:
 {{ toYaml . | indent 8 }}
     {{- end }}
     spec:
+      {{- if .Values.distributor.tolerations }}
       tolerations:
 {{ toYaml .Values.distributor.tolerations | indent 8 }}
+      {{- end }}
+      {{- if .Values.distributor.affinity }}
       affinity:
 {{ toYaml .Values.distributor.affinity | indent 8 }}
+      {{- end }}
       containers:
       - name: distributor
         image: "{{ .Values.distributor.image.repository }}:{{ .Values.distributor.image.tag }}"
