@@ -1,4 +1,8 @@
+{{- if eq .Values.kubeVersion "v1.18.1" }}
+apiVersion: apps/v1
+{{- else }}
 apiVersion: extensions/v1beta1
+{{- end }}
 kind: Deployment
 metadata:
   name: {{ template "fullname" . }}-query-frontend
@@ -9,6 +13,11 @@ metadata:
     cortex: query-frontend
 spec:
   replicas: {{ .Values.queryFrontend.replicas }}
+  selector:
+    matchLabels:
+      app: {{ template "name" . }}-query-frontend
+      release: {{ .Release.Name }}
+      cortex: query-frontend
   template:
     metadata:
       labels:

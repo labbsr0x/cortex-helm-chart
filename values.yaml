@@ -1,3 +1,4 @@
+kubeVersion: 'v1.18.1'
 dynamodb:
   originalTableName: cortex_original
   enabled: false
