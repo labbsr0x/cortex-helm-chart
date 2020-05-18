@@ -119,6 +119,7 @@ spec:
             port: 80
           initialDelaySeconds: 15
           timeoutSeconds: 1
+        {{- if not .Values.cassandra.enabled }}
         env:
           - name: AWS_DEFAULT_REGION
           {{ if .Values.aws.stsEnabled -}}
@@ -140,6 +141,7 @@ spec:
               secretKeyRef:
                 name: cortex-aws-creds
                 key: USER_PASSWORD
+          {{- end }}
           {{- end }}
         resources:
 {{ toYaml .Values.ingester.resources | indent 10 }}
